@@ -1,3 +1,21 @@
+/* foo()
+{
+
+
+
+
+}
+
+fa()
+{
+
+
+
+
+}
+
+*/
+
 /* comments are the same as c
 	btw white space doesn't matter (same as c)
 */

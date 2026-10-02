@@ -237,9 +237,20 @@ fn main(){
 	let first = second.clone();
 	println!("{}", first);
 	
+//another way to do it is by borrowing by reference
 
+	let a1 = String::from("Hello");
+	let b1 = &a1;
 
+	println!("a = {} \nb = {}", a1,b1);
 
+//in order to changea value through reference, reference needs to be mut
+
+	let name1 = String::from("Arien");
+	let mut name_ref = &mut name;
+	name_ref.push_str(" Stalford");
+
+	println!("{}", name_ref);
 
 
 }

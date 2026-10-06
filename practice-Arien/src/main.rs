@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 /* foo()
 {
 
@@ -264,11 +265,90 @@ fn main(){
 
 //in order to changea value through reference, reference needs to be mut
 
-	let name1 = String::from("Arien");
-	let mut name_ref = &mut name;
+	let mut name1 = String::from("Arien");
+	let name_ref = &mut name1;
 	name_ref.push_str(" Stalford");
 
 	println!("{}", name_ref);
+
+/* rust has arrays, vectors(vec), tuples, hashmaps
+*/
+//arrays
+//you cant add elements to array you can only update existing ones, 
+//you can do both in vector
+	let fruits = ["apple", "banana", "orange"];
+	println!("Last fruit: {}", fruits[2]);
+
+
+	let mut nums = [1,2,3,4,5,6];
+	println!("The first number is: {}", nums[0]);
+
+	nums[0] = 7;
+	println!("The new first number is: {}", nums[0]);
+
+	println!("The array has {} elements", nums.len());
+
+	for num in nums{
+		println!("{}", num);
+	}
+
+	println!("{:?}", nums);
+
+
+
+
+//vectors
+	let mut fruitv = vec!["apple", "banana"];
+	fruitv.push("orange");
+
+	println!("Last fruit in vec: {}", fruitv[2]);
+
+
+	fruitv[0] = "grape";
+
+	println!("New first fruit: {}", fruitv[0]);
+
+	fruitv.push("apple");
+
+	println!("{:?}", fruitv);
+
+	//remove last
+	fruitv.pop();
+
+	fruitv.insert(0, "cherry");
+	println!("{:?}", fruitv);
+
+	fruitv.remove(0);
+	println!("{:?}", fruitv);
+
+	println!("There are {} fruits", fruitv.len());
+
+	for fruit in &fruitv{
+		println!("{}", fruit);
+	}
+
+
+//tuples
+	let person = ("John", 30, true);
+	println!("Name : {}", person.0);
+	println!("Age: {}", person.1);
+	println!("Is active: {}", person.2);
+
+
+	let (name, age, active) = person;
+
+	println!("Name: {}", name);
+	println!("Age: {}", age);
+	println!("Active: {}", active);
+
+//hash map uses library in top (use std:: collections::HashMap;)
+
+	let mut capitalcities = HashMap::new();
+	capitalcities.insert("France", "Paris");
+	capitalcities.insert("Japan", "Tokyo");
+
+	println!("Capital of Japan is {}", capitalcities["Japan"]);
+
 
 
 }

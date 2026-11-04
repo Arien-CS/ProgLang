@@ -19,8 +19,8 @@ fn listen(ip:&str)
     let listeer = TcpListener::bind(ip).unwrap();
     
     //makes connection
-    for stream in listener.incoming(){
-        let stream = stream.unwrap();
+    for message in stream.incoming(){
+        let message = message.unwrap();
 
         println!("Connection made");
 

@@ -1,1 +1,0 @@
-/mnt/c/Users/DSU/OneDrive\ -\ Dakota\ State\ University/Desktop/FA26/ProgrammingLanguages/FInalProj/ProgLang/threadsNports/target/debug/threadsNports: /mnt/c/Users/DSU/OneDrive\ -\ Dakota\ State\ University/Desktop/FA26/ProgrammingLanguages/FInalProj/ProgLang/threadsNports/src/main.rs

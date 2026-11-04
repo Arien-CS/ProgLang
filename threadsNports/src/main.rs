@@ -16,10 +16,10 @@ fn listen(ip:&str)
 {
     println!("Listening on {}", ip);
     //This one needs to listen not connect
-    let listeer = TcpListener::bind(ip).unwrap();
+    let listener = TcpListener::bind(ip).unwrap();
     
     //makes connection
-    for message in stream.incoming(){
+    for message in listener.incoming(){
         let message = message.unwrap();
 
         println!("Connection made");

@@ -16,13 +16,17 @@ fn listen(ip:&str)
 {
     println!("Listening on {}", ip);
     //This one needs to listen not connect
-    let stream = TcpListener::bind(ip).unwrap();
+    let listeer = TcpListener::bind(ip).unwrap();
     
     //makes connection
-    for message in stream.incoming(){
-        let message = message.unwrap();
+    for stream in listener.incoming(){
+        let stream = stream.unwrap();
 
         println!("Connection made");
+
+        //put the print in this so it shows each stream
+
+
     }
     
 }
@@ -30,7 +34,7 @@ fn listen(ip:&str)
 fn send(ip:&str)
 {
     //Thread needs to wait so that connection is made before listen on it
-    thread::sleep(Duration::from_secs(5));
+    thread::sleep(Duration::from_secs(1));
     println!("Waiting to send on {}", ip);
     let mut stream = TcpStream::connect(ip).unwrap();
     stream.write(b"yooooo");

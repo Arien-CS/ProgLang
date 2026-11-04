@@ -19,8 +19,7 @@ fn listen(ip:&str)
     let stream = TcpListener::bind(ip).unwrap();
     
     //makes connection
-    for message in stream.incoming(){
-        let message = message.unwrap();
+    for message in stream.accept(){
 
         println!("Connection made");
     }

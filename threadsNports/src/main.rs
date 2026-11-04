@@ -1,6 +1,8 @@
-use std::io::BufWriter;
+// use std::io::BufWriter;
 use std::thread;
-use std::net::TcpStream;
+use std::time::Duration;
+use std::net::{TcpStream, TcpListener};
+use std::io::Write;
 
 fn main() {                       // || is like saying make a function that calls do_work
     let _myIp = "127.0.0.1:6767";
@@ -13,16 +15,25 @@ fn main() {                       // || is like saying make a function that call
 fn listen(ip:&str)
 {
     println!("Listening on {}", ip);
-    let mut stream = TcpStream::connect(ip).unwrap();
+    //This one needs to listen not connect
+    let stream = TcpListener::bind(ip).unwrap();
     
+    //makes connection
+    for message in stream.incoming(){
+        let message = message.unwrap();
+
+        println!("Connection made");
+    }
     
 }
 
 fn send(ip:&str)
 {
+    //Thread needs to wait so that connection is made before listen on it
+    thread::sleep(Duration::from_secs(5));
     println!("Waiting to send on {}", ip);
     let mut stream = TcpStream::connect(ip).unwrap();
-    stream.write("yooooo");
+    stream.write(b"yooooo");
 
 
 }

@@ -1,1 +1,1 @@
-C:\Users\DSU\OneDrive\ -\ Dakota\ State\ University\Desktop\Proj\ProgLang\threadsNports\target\debug\threadsNports.exe: C:\Users\DSU\OneDrive\ -\ Dakota\ State\ University\Desktop\Proj\ProgLang\threadsNports\src\main.rs
+/mnt/c/Users/DSU/OneDrive\ -\ Dakota\ State\ University/Desktop/FA26/ProgrammingLanguages/FInalProj/ProgLang/threadsNports/target/debug/threadsNports: /mnt/c/Users/DSU/OneDrive\ -\ Dakota\ State\ University/Desktop/FA26/ProgrammingLanguages/FInalProj/ProgLang/threadsNports/src/main.rs

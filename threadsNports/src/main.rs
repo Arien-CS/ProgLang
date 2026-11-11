@@ -2,8 +2,7 @@ use std::io::{BufWriter, BufReader, BufRead};
 use std::thread;
 use std::time::Duration;
 use std::net::{TcpStream, TcpListener};
-use std::io::Write;
-
+use std::io::Wriuse colored::Colorize;
 
 fn main() {                       // || is like saying make a function that calls do_work
     let _myIp = "127.0.0.1:6767";
@@ -38,9 +37,9 @@ fn listen(ip:&str)
   
         reader.read_line( &mut response );
         //makes reader read the whole line
-        print!("resp: ");
+        print!("{} ", "resp:".blue());
         
-        println!("{}", response);
+        println!("{}", response.blue());
         response.clear();
         }
 
@@ -67,7 +66,7 @@ fn send(ip:&str)
     // stream.write_all(b"yooooo5\n");
 
 
-    println!("Please start giving input");
+    println!("{}", "Please start giving input".cyan());
     while true
     {
 

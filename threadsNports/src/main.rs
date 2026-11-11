@@ -2,7 +2,8 @@ use std::io::{BufWriter, BufReader, BufRead};
 use std::thread;
 use std::time::Duration;
 use std::net::{TcpStream, TcpListener};
-use std::io::Wriuse colored::Colorize;
+use std::io::Write;
+use colored::Colorize;
 
 fn main() {                       // || is like saying make a function that calls do_work
     let _myIp = "127.0.0.1:6767";

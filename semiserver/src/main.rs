@@ -69,6 +69,7 @@ fn forwarding(ip:&str)
             println!("{}", response.yellow());
             // response.clear();
             stream.write_all(format!("{}\n", response).as_bytes()).unwrap();
+            response.clear();
 
         }
 

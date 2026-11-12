@@ -4,18 +4,19 @@ use std::time::Duration;
 use colored::Colorize;
 use std::thread;
 
-use local_ip_address::local_ip;
+use local_ip_address::local_ip; 
 
 
 fn main() {                       // || is like saying make a function that calls do_work
     let _myIp = "127.0.0.1:6766";
+    let server = "127.0.0.1:6767";
     let _yourIp = "127.0.0.1:6768";
-    let server = "0.0.0.0:6768";
     let listenThread = thread::spawn(move || { listen(_myIp) });
-    let sendThread = thread::spawn(move || { send(_yourIp) });
-    let srvThread = thread::spawn(move || { forwarding(server) });
+    let sendThread = thread::spawn(move || { send(server) });
+    // let srvThread = thread::spawn(move || { forwarding(server) });
     listenThread.join().unwrap();
     sendThread.join().unwrap();
+    // srvThread.join().unwrap();
 }
 
 fn forwarding(ip:&str)
@@ -130,13 +131,15 @@ fn send(ip:&str)
     // stream.write_all(b"yooooo1\n");
     thread::sleep(Duration::from_secs(1));
 
-    let my_local_ip = local_ip().unwrap();
+    // let my_local_ip = local_ip().unwrap();
+    let my_local_ip = ip;
+
 
     stream.write_all(format!("{}\n", my_local_ip).as_bytes()).unwrap();
 
 
 
-    println!("{}", "Please start giving input".cyan());
+    println!("{}", "Please start by giving destination: ".cyan());
     while true
     {
 

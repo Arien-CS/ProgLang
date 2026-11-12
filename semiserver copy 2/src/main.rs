@@ -111,9 +111,9 @@ fn listen(ip:&str)
             {
                 break;
             }
-            print!("{} ", "resp:".blue());
+            print!("{} ", "resp:".cyan());
             
-            println!("{}", response.blue());
+            println!("{}", response.cyan());
             response.clear();
         }
 

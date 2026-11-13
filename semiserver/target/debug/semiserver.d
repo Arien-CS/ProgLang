@@ -1,1 +1,1 @@
-C:\Users\DSU\OneDrive\ -\ Dakota\ State\ University\Desktop\FA26\ProgrammingLanguages\FInalProj\ProgLang\semiserver\target\debug\semiserver.exe: C:\Users\DSU\OneDrive\ -\ Dakota\ State\ University\Desktop\FA26\ProgrammingLanguages\FInalProj\ProgLang\semiserver\src\main.rs
+C:\Users\DSU\OneDrive\ -\ Dakota\ State\ University\Desktop\Proj\ProgLang\semiserver\target\debug\semiserver.exe: C:\Users\DSU\OneDrive\ -\ Dakota\ State\ University\Desktop\Proj\ProgLang\semiserver\src\main.rs

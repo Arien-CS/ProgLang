@@ -1,19 +1,21 @@
+
 use std::io::{{BufWriter, BufReader, BufRead}, Write};
 use std::net::{TcpStream, TcpListener};
 use std::time::Duration;
 use colored::Colorize;
 use std::thread;
 
-use local_ip_address::local_ip;
-
+use local_ip_address::local_ip; 
+use std::sync::atomic::{AtomicBool, Ordering};
+static USING: AtomicBool = AtomicBool::new(true);
 
 fn main() {                       // || is like saying make a function that calls do_work
     let _listen = "127.0.0.1:6768";
     let _server = "127.0.0.1:6767";
     let listenThread = thread::spawn(move || { listen(_listen) });
     let sendThread = thread::spawn(move || { send(_server) });
-    listenThread.join().unwrap();
     sendThread.join().unwrap();
+    return;
 }
 
 fn listen(ip:&str)
@@ -30,9 +32,13 @@ fn listen(ip:&str)
         //String for message to go in
         let mut reader = BufReader::new( message );
         //reads message
-        while true
-        {
+        while USING.load(Ordering::SeqCst)        {
             let n = reader.read_line( &mut response ).unwrap();
+            if response.trim() == "Exit"
+            {
+                println!("Conversation Ended due to chat mate");
+                // return;
+            }
             //makes reader read the whole line
             if n == 0 
             {
@@ -41,7 +47,9 @@ fn listen(ip:&str)
             print!("{} ", "resp:".cyan());
             println!("{}", response.cyan());
             response.clear();
+
         }
+        return;
     }
 }
 
@@ -54,7 +62,7 @@ fn send(ip:&str)
     thread::sleep(Duration::from_secs(1));
 
     // let my_local_ip = local_ip().unwrap();
-    let my_local_ip = ip;
+    let my_local_ip = "127.0.0.1:6765";
 
     stream.write_all(format!("{}\n", my_local_ip).as_bytes()).unwrap();
     println!("{}", "Please start by giving destination: ".cyan());
@@ -64,6 +72,12 @@ fn send(ip:&str)
         let mut input = String::new();
         std::io::stdin().read_line( &mut input);
         stream.write_all(input.as_bytes());
+        if input.trim() == "Exit" || input == "exit"
+        {
+            thread::sleep(Duration::from_secs(2));
+            USING.store(false, Ordering::SeqCst);
+            break;
+        }
     }
 
     let my_local_ip = local_ip().unwrap();

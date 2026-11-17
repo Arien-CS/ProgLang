@@ -82,7 +82,7 @@ fn send(ip:&str)
             let mut input = String::new();
             let _ = std::io::stdin().read_line( &mut input);
             let _ = stream.write_all(input.as_bytes());
-            if (input.trim() == "Exit" )
+            if input.trim() == "Exit"
             {
                 thread::sleep(Duration::from_secs(2));
                 CONNECTING.store(false, Ordering::Relaxed);

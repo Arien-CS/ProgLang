@@ -1,19 +1,21 @@
-use std::io::{{BufWriter, BufReader, BufRead}, Write};
+use std::io::{{BufReader, BufRead}, Write};
 use std::net::{TcpStream, TcpListener};
+use local_ip_address::local_ip;
 use std::time::Duration;
 use colored::Colorize;
 use std::thread;
-
-use local_ip_address::local_ip; 
+ 
 use std::sync::atomic::{AtomicBool, Ordering};
-static USING: AtomicBool = AtomicBool::new(true);
+
+static CONNECTED: AtomicBool = AtomicBool::new(false);
+static CONNECTING: AtomicBool = AtomicBool::new(false);
 
 fn main() {                       // || is like saying make a function that calls do_work
     let _listen = "127.0.0.1:6765";
     let _server = "127.0.0.1:6767";
-    let listenThread = thread::spawn(move || { listen(_listen) });
-    let sendThread = thread::spawn(move || { send(_server) });
-    sendThread.join().unwrap();
+    thread::spawn(move || { listen(_listen) });
+    let send_thread = thread::spawn(move || { send(_server) });
+    send_thread.join().unwrap();
     return;
 }
 
@@ -31,11 +33,15 @@ fn listen(ip:&str)
         //String for message to go in
         let mut reader = BufReader::new( message );
         //reads message
-        while USING.load(Ordering::SeqCst)        {
+            loop
+            {
             let n = reader.read_line( &mut response ).unwrap();
             if response.trim() == "Exit"
             {
                 println!("Conversation Ended due to chat mate");
+                println!("Please hit enter to connect to continue");
+                CONNECTED.store(false, Ordering::Relaxed);
+                break;
                 // return;
             }
             //makes reader read the whole line
@@ -48,39 +54,45 @@ fn listen(ip:&str)
             response.clear();
 
         }
-        return;
     }
 }
 
 fn send(ip:&str)
 {
     //Thread needs to wait so that connection is made before listen on it
-    thread::sleep(Duration::from_secs(1));
-    println!("Server is set to {}", ip);
-    let mut stream = TcpStream::connect(ip).unwrap();
-    thread::sleep(Duration::from_secs(1));
 
-    // let my_local_ip = local_ip().unwrap();
-    let my_local_ip = "127.0.0.1:6765";
+    CONNECTING.store(true, Ordering::Relaxed);
+    while CONNECTING.load(Ordering::Relaxed)
 
-    stream.write_all(format!("{}\n", my_local_ip).as_bytes()).unwrap();
-    println!("{}", "Please start by giving destination: ".cyan());
-
-    while true
     {
-        let mut input = String::new();
-        std::io::stdin().read_line( &mut input);
-        stream.write_all(input.as_bytes());
-        if input.trim() == "Exit" || input == "exit"
-        {
-            thread::sleep(Duration::from_secs(2));
-            USING.store(false, Ordering::SeqCst);
-            break;
-        }
-    }
+        thread::sleep(Duration::from_secs(1));
+        println!("Server is set to {}", ip);
+        let mut stream = TcpStream::connect(ip).unwrap();
+        thread::sleep(Duration::from_secs(1));
 
-    let my_local_ip = local_ip().unwrap();
-    stream.write_all(format!("{}\n", my_local_ip).as_bytes()).unwrap();
+        // let my_local_ip = local_ip().unwrap();
+        let my_local_ip = "127.0.0.1:6765";
+
+        stream.write_all(format!("{}\n", my_local_ip).as_bytes()).unwrap();
+        println!("{}", "Please start by giving destination or enter 'Exit': ".yellow());
+        CONNECTED.store(true, Ordering::Relaxed);
+
+        while CONNECTED.load(Ordering::Relaxed)
+        {
+            let mut input = String::new();
+            let _ = std::io::stdin().read_line( &mut input);
+            let _ = stream.write_all(input.as_bytes());
+            if (input.trim() == "Exit" )
+            {
+                thread::sleep(Duration::from_secs(2));
+                CONNECTING.store(false, Ordering::Relaxed);
+                CONNECTED.store(false, Ordering::Relaxed);
+                break;
+                
+            }
+        }
+    }   
+
 
 
 }

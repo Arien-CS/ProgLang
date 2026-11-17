@@ -1,15 +1,13 @@
-use std::io::{{BufWriter, BufReader, BufRead}, Write};
+use std::io::{{BufReader, BufRead}, Write};
 use std::net::{TcpStream, TcpListener};
-use std::time::Duration;
 use colored::Colorize;
 use std::thread;
 
-use local_ip_address::local_ip;
 
 fn main() {
     let server = "127.0.0.1:6767";
-    let srvThread = thread::spawn(move || { forwarding(server) });
-    srvThread.join().unwrap();
+    let srv_thread = thread::spawn(move || { forwarding(server) });
+    srv_thread.join().unwrap();
 }
 
 fn forwarding(ip:&str)
@@ -25,27 +23,39 @@ fn forwarding(ip:&str)
         {
             let mut response = String::new();
             let mut reader = BufReader::new( message );
-            let mut n = reader.read_line( &mut response ).unwrap();
-            let mut _senderIP = response.trim().to_string(); // my IP 
+            reader.read_line( &mut response ).unwrap();
+            let sender_ip = response.trim().to_string(); // my IP 
             response.clear();
-            reader.read_line( &mut response ).unwrap();//SendingIP
+
+            
+            reader.read_line( &mut response ).unwrap();//reciving IP
+            if response.trim() == "Exit"
+            {
+                println!("Client left before connecting");
+                return;
+            }
             let mut _send = response.trim().to_string();
             response.clear();
-            println!("From: {}, to: {}", _senderIP, _send);
+            println!("From: {}, to: {}", sender_ip, _send);
 
             let mut stream = TcpStream::connect(&_send).unwrap();
             stream.write_all(format!("{}\n", _send).as_bytes()).unwrap();
 
-            while true
+            loop
             {
-                n = reader.read_line( &mut response ).unwrap();
+                reader.read_line( &mut response ).unwrap();
 
                 if response.trim() == "Exit"
                 {
                     stream.write_all(response.as_bytes()).unwrap();
                     println!("Connection ended");
-                    let mut end = TcpStream::connect(&_senderIP).unwrap();
+                    let mut end = TcpStream::connect(&sender_ip).unwrap();
                     end.write_all(response.as_bytes()).unwrap();
+                    break;
+                }
+
+                if response.trim() == ""
+                {
                     break;
                 }
                 print!("{} ", "srv:".yellow());

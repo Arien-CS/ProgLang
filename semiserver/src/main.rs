@@ -21,8 +21,11 @@ fn main() {                       // || is like saying make a function that call
 
 fn listen(ip:&str)
 {
+
+    //Display current info
     println!("Listening on {}", ip);
     //This one needs to listen not connect
+    //start listener
     let listener = TcpListener::bind(ip).unwrap();
     //makes connection
     for message in listener.incoming(){
@@ -36,6 +39,7 @@ fn listen(ip:&str)
             loop
             {
             let n = reader.read_line( &mut response ).unwrap();
+            //if recieve "Exit" tell user done messeging and set connected to false so can restart sending loop
             if response.trim() == "Exit"
             {
                 println!("Conversation Ended due to chat mate");
@@ -60,19 +64,20 @@ fn listen(ip:&str)
 fn send(ip:&str)
 {
     //Thread needs to wait so that connection is made before listen on it
-
+    //sets connecting to true to connect to others
     CONNECTING.store(true, Ordering::Relaxed);
     while CONNECTING.load(Ordering::Relaxed)
-
     {
         thread::sleep(Duration::from_secs(1));
         println!("Server is set to {}", ip);
         let mut stream = TcpStream::connect(ip).unwrap();
         thread::sleep(Duration::from_secs(1));
 
+        //get IP to send for response loop
         // let my_local_ip = local_ip().unwrap();
         let my_local_ip = "127.0.0.1:6765";
 
+        //write IP and ask for destination, set connected to true to keep messeging
         stream.write_all(format!("{}\n", my_local_ip).as_bytes()).unwrap();
         println!("{}", "Please start by giving destination or enter 'Exit': ".yellow());
         CONNECTED.store(true, Ordering::Relaxed);
@@ -82,6 +87,7 @@ fn send(ip:&str)
             let mut input = String::new();
             let _ = std::io::stdin().read_line( &mut input);
             let _ = stream.write_all(input.as_bytes());
+            //if Exit is sent, disconect from all
             if input.trim() == "Exit"
             {
                 thread::sleep(Duration::from_secs(2));
